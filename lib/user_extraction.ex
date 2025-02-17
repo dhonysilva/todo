@@ -15,4 +15,13 @@ defmodule UserExtraction do
 
   defp extract_password(%{"password" => password}), do: {:ok, password}
   defp extract_password(_), do: {:error, "password missing"}
+
+  # Training with the examples provided by documentation.
+  # https://hexdocs.pm/elixir/Kernel.SpecialForms.html#with/1
+  def area(opts) do
+    with {:ok, width} <- Map.fetch(opts, :width),
+         {:ok, height} <- Map.fetch(opts, :height) do
+      {:ok, width * height}
+    end
+  end
 end
