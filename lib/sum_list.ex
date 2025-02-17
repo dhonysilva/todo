@@ -1,12 +1,14 @@
 defmodule ListHelper do
-  def sum([]), do: 0
+  def sum(list) do
+    do_sum(0, list)
+  end
 
-  # The sum of the list's head plus the sum of list's tail applied recursively.
-  # [1, 2, 3]
-  # 1 + [2, 3]
-  # 3 + [3]
-  # 6
-  def sum([head | tail]) do
-    head + sum(tail)
+  defp do_sum(current_sum, []) do
+    current_sum
+  end
+
+  defp do_sum(current_sum, [head | tail]) do
+    new_sum = head + current_sum
+    do_sum(new_sum, tail)
   end
 end
