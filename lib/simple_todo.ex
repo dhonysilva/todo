@@ -57,3 +57,12 @@ defmodule TodoList do
     %TodoList{todo_list | entries: Map.delete(todo_list.entries, entry_id)}
   end
 end
+
+defmodule TodoList.CsvImporter do
+  def read_lines(file_name) do
+    file_name
+    |> File.stream!()
+    |> Stream.map(&String.trim_trailing(&1, "\n"))
+    |> IO.inspect()
+  end
+end
