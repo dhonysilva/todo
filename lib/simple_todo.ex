@@ -63,6 +63,10 @@ defmodule TodoList.CsvImporter do
     file_name
     |> File.stream!()
     |> Stream.map(&String.trim_trailing(&1, "\n"))
-    |> IO.inspect()
+    |> Stream.map(fn line ->
+      [date_string, title] = String.split(line, ",")
+      date = Date.from_iso8601!(date_string)
+      %{date: date, title: title}
+    end)
   end
 end
