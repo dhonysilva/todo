@@ -1,6 +1,10 @@
 defmodule TodoServer do
   def start do
-    spawn(fn -> loop(TodoList.new()) end)
+    spawn(fn ->
+      Process.set_label("todo_process")
+      Process.register(self(), :todo_server)
+      loop(TodoList.new())
+    end)
   end
 
   defp loop(todo_list) do
@@ -12,12 +16,14 @@ defmodule TodoServer do
     loop(new_todo_list)
   end
 
-  def add_entry(todo_server, new_entry) do
-    send(todo_server, {:add_entry, new_entry})
+  # Instruction on how to use this function to add an entry
+  # TodoServer.add_entry(%{date: ~D[2023-12-19], title: "Dentist"})
+  def add_entry(new_entry) do
+    send(:todo_server, {:add_entry, new_entry})
   end
 
-  def entries(todo_server, date) do
-    send(todo_server, {:entries, self(), date})
+  def entries(date) do
+    send(:todo_server, {:entries, self(), date})
 
     receive do
       {:todo_entries, entries} -> entries
@@ -27,14 +33,14 @@ defmodule TodoServer do
   end
 
   # Instruction on how to use this function to update an entry
-  # TodoServer.update_entry(todo_server, 1, &Map.put(&1, :date, ~D[2024-12-19]))
+  # TodoServer.update_entry(1, &Map.put(&1, :date, ~D[2024-12-19]))
 
-  def update_entry(todo_server, entry_id, updater_fun) do
-    send(todo_server, {:update_entry, entry_id, updater_fun})
+  def update_entry(entry_id, updater_fun) do
+    send(:todo_server, {:update_entry, entry_id, updater_fun})
   end
 
-  def delete_entry(todo_server, entry_id) do
-    send(todo_server, {:delete_entry, entry_id})
+  def delete_entry(entry_id) do
+    send(:todo_server, {:delete_entry, entry_id})
   end
 
   defp process_message(todo_list, {:add_entry, new_entry}) do
@@ -53,6 +59,8 @@ defmodule TodoServer do
   defp process_message(todo_list, {:delete_entry, entry_id}) do
     TodoList.delete_entry(todo_list, entry_id)
   end
+
+  defp process_message(todo_list, _), do: todo_list
 end
 
 defmodule TodoList do
