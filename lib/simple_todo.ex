@@ -26,6 +26,9 @@ defmodule TodoServer do
     end
   end
 
+  # Instruction on how to use this function to update an entry
+  # TodoServer.update_entry(todo_server, 1, &Map.put(&1, :date, ~D[2024-12-19]))
+
   def update_entry(todo_server, entry_id, updater_fun) do
     send(todo_server, {:update_entry, entry_id, updater_fun})
   end
