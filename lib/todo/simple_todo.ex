@@ -1,28 +1,38 @@
 defmodule TodoServer do
+  use GenServer
+
   def start do
-    ServerProcess.start(TodoServer)
+    GenServer.start(TodoServer, nil, name: :todo_server)
   end
 
   # Instruction on how to use this function to add an entry
   # TodoServer.add_entry(%{date: ~D[2023-12-19], title: "Dentist"})
   def add_entry(new_entry) do
-    send(:todo_server, {:add_entry, new_entry})
+    GenServer.cast(:todo_server, {:add_entry, new_entry})
   end
 
   def entries(date) do
-    ServerProcess.call(:todo_server, {:entries, date})
+    GenServer.call(:todo_server, {:entries, date})
   end
 
-  def init do
-    TodoList.new()
+  @impl GenServer
+  def init(_) do
+    {:ok, TodoList.new()}
   end
 
+  @impl GenServer
   def handle_cast({:add_entry, new_entry}, todo_list) do
-    TodoList.add_entry(todo_list, new_entry)
+    new_state = TodoList.add_entry(todo_list, new_entry)
+    {:noreply, new_state}
   end
 
-  def handle_call({:entries, date}, todo_list) do
-    {TodoList.entries(todo_list, date), todo_list}
+  @impl GenServer
+  def handle_call({:entries, date}, _, todo_list) do
+    {
+      :reply,
+      TodoList.entries(todo_list, date),
+      todo_list
+    }
   end
 end
 
