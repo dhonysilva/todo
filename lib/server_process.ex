@@ -21,6 +21,7 @@ defmodule ServerProcess do
     end
   end
 
+  #                The ↓ request might be :put or :get
   def call(server_pid, request) do
     send(server_pid, {request, self()})
 
@@ -28,5 +29,21 @@ defmodule ServerProcess do
       {:response, response} ->
         response
     end
+  end
+end
+
+defmodule KeyValeuStore do
+  def init do
+    %{}
+  end
+
+  # Handles the put request
+  def handle_call({:put, key, value}, state) do
+    {:ok, Map.put(state, key, value)}
+  end
+
+  # Handles the get request
+  def handle_call({:get, key}, state) do
+    {Map.get(state, key), state}
   end
 end
