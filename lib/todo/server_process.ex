@@ -54,15 +54,15 @@ defmodule KeyValueStore do
   end
 
   def start do
-    ServerProcess.start(KeyValueStore)
+    GenServer.start(KeyValueStore, nil)
   end
 
   def put(pid, key, value) do
-    ServerProcess.cast(pid, {:put, key, value})
+    GenServer.cast(pid, {:put, key, value})
   end
 
   def get(pid, key) do
-    ServerProcess.call(pid, {:get, key})
+    GenServer.call(pid, {:get, key})
   end
 
   # Handles the put request
