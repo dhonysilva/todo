@@ -7,7 +7,7 @@ defmodule KeyValueStore do
   end
 
   def start do
-    GenServer.start(KeyValueStore, nil)
+    GenServer.start(KeyValueStore, nil, name: KeyValueStore)
   end
 
   def handle_info(:cleanup, state) do
@@ -15,12 +15,12 @@ defmodule KeyValueStore do
     {:noreply, state}
   end
 
-  def put(pid, key, value) do
-    GenServer.cast(pid, {:put, key, value})
+  def put(key, value) do
+    GenServer.cast(KeyValueStore, {:put, key, value})
   end
 
-  def get(pid, key) do
-    GenServer.call(pid, {:get, key})
+  def get(key) do
+    GenServer.call(KeyValueStore, {:get, key})
   end
 
   # Handles the put request
