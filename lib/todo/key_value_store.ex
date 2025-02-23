@@ -2,11 +2,17 @@ defmodule KeyValueStore do
   use GenServer
 
   def init(_) do
+    :timer.send_interval(5000, :cleanup)
     {:ok, %{}}
   end
 
   def start do
     GenServer.start(KeyValueStore, nil)
+  end
+
+  def handle_info(:cleanup, state) do
+    IO.puts("Performing cleanup.")
+    {:noreply, state}
   end
 
   def put(pid, key, value) do
