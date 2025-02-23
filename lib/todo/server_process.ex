@@ -47,8 +47,10 @@ defmodule ServerProcess do
 end
 
 defmodule KeyValueStore do
-  def init do
-    %{}
+  use GenServer
+
+  def init(_) do
+    {:ok, %{}}
   end
 
   def start do
@@ -65,11 +67,11 @@ defmodule KeyValueStore do
 
   # Handles the put request
   def handle_cast({:put, key, value}, state) do
-    Map.put(state, key, value)
+    {:noreply, Map.put(state, key, value)}
   end
 
   # Handles the get request
-  def handle_call({:get, key}, state) do
-    {Map.get(state, key), state}
+  def handle_call({:get, key}, _, state) do
+    {:reply, Map.get(state, key), state}
   end
 end
