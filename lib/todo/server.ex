@@ -35,29 +35,3 @@ defmodule Todo.Server do
     }
   end
 end
-
-defmodule Todo.List.CsvImporter do
-  def import(file_name) do
-    file_name
-    |> read_lines()
-    |> create_entries()
-    |> Todo.List.new()
-  end
-
-  def read_lines(file_name) do
-    file_name
-    |> File.stream!()
-    |> Stream.map(&String.trim_trailing(&1, "\n"))
-  end
-
-  defp create_entries(lines) do
-    Stream.map(
-      lines,
-      fn line ->
-        [date_string, title] = String.split(line, ",")
-        date = Date.from_iso8601!(date_string)
-        %{date: date, title: title}
-      end
-    )
-  end
-end
