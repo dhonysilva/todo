@@ -1,13 +1,13 @@
-defmodule TodoList do
+defmodule Todo.List do
   # Struct that describes the To-do list
   defstruct next_id: 1, entries: %{}
 
-  # Interativelly create a new TodoList itens from a raw list of Entry instances
-  # into an instance of the struct %TodoList struct relying on the Enum.reduce/3
+  # Interativelly create a new Todo.List itens from a raw list of Entry instances
+  # into an instance of the struct %Todo.List struct relying on the Enum.reduce/3
   def new(entries \\ []) do
     Enum.reduce(
       entries,
-      %TodoList{},
+      %Todo.List{},
       fn entry, todo_list_acc ->
         add_entry(todo_list_acc, entry)
       end
@@ -32,7 +32,7 @@ defmodule TodoList do
         entry
       )
 
-    %TodoList{todo_list | entries: new_entries, next_id: todo_list.next_id + 1}
+    %Todo.List{todo_list | entries: new_entries, next_id: todo_list.next_id + 1}
   end
 
   def entries(todo_list, date) do
@@ -49,11 +49,11 @@ defmodule TodoList do
       {:ok, old_entry} ->
         new_entry = updater_fun.(old_entry)
         new_entries = Map.put(todo_list.entries, new_entry.id, new_entry)
-        %TodoList{todo_list | entries: new_entries}
+        %Todo.List{todo_list | entries: new_entries}
     end
   end
 
   def delete_entry(todo_list, entry_id) do
-    %TodoList{todo_list | entries: Map.delete(todo_list.entries, entry_id)}
+    %Todo.List{todo_list | entries: Map.delete(todo_list.entries, entry_id)}
   end
 end

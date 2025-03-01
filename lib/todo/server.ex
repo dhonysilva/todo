@@ -1,4 +1,4 @@
-defmodule TodoServer do
+defmodule Todo.Server do
   use GenServer
 
   def start do
@@ -17,12 +17,12 @@ defmodule TodoServer do
 
   @impl GenServer
   def init(_) do
-    {:ok, TodoList.new()}
+    {:ok, Todo.List.new()}
   end
 
   @impl GenServer
   def handle_cast({:add_entry, new_entry}, todo_list) do
-    new_state = TodoList.add_entry(todo_list, new_entry)
+    new_state = Todo.List.add_entry(todo_list, new_entry)
     {:noreply, new_state}
   end
 
@@ -30,18 +30,18 @@ defmodule TodoServer do
   def handle_call({:entries, date}, _, todo_list) do
     {
       :reply,
-      TodoList.entries(todo_list, date),
+      Todo.List.entries(todo_list, date),
       todo_list
     }
   end
 end
 
-defmodule TodoList.CsvImporter do
+defmodule Todo.List.CsvImporter do
   def import(file_name) do
     file_name
     |> read_lines()
     |> create_entries()
-    |> TodoList.new()
+    |> Todo.List.new()
   end
 
   def read_lines(file_name) do
