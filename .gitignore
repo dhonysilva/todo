@@ -21,3 +21,6 @@ todo-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Temporary files, for example, from tests.
+/persist/
