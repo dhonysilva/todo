@@ -9,13 +9,13 @@ defmodule Todo.Cache do
     GenServer.call(cache_pid, {:server_process, todo_list_name})
   end
 
+  @impl GenServer
   def init(_) do
     Todo.Database.start()
     {:ok, %{}}
   end
 
-  # Using a call because this request is synchronous
-  # and we need to return the result to the caller (a to-do server PID)
+  @impl GenServer
   def handle_call({:server_process, todo_list_name}, _, todo_servers) do
     case Map.fetch(todo_servers, todo_list_name) do
       {:ok, todo_server} ->
