@@ -15,6 +15,7 @@ defmodule Todo.Server do
 
   @impl GenServer
   def init(name) do
+    IO.puts("Stating To-do Server for #{name}.")
     {:ok, {name, nil}, {:continue, :init}}
   end
 
