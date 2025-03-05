@@ -2,6 +2,11 @@ defmodule Todo.Cache do
   use GenServer
 
   def start_link(_) do
+    # This is the basic structure of a GenServer.start_link:
+    # GenServer.start_link(calback_module, some_arg, name: some_name)
+    #
+    # name option can also be a via tuple:
+    # GenServer.start_link(calback_module, some_arg, name: {:via, some_name, some_arg})
     GenServer.start_link(__MODULE__, nil, name: __MODULE__)
   end
 
