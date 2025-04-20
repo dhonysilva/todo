@@ -9,6 +9,13 @@ defmodule Todo.Server do
     {:global, {__MODULE__, name}}
   end
 
+  def whereis(name) do
+    case :global.whereis_name({__MODULE__, name}) do
+      :undefined -> nil
+      pid -> pid
+    end
+  end
+
   def add_entry(todo_server, new_entry) do
     GenServer.cast(todo_server, {:add_entry, new_entry})
   end
